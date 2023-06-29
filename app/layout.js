@@ -1,27 +1,23 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
 import React from "react";
-import { Footer } from './commponent/Footer';
-import { Navbar } from './commponent/Navbar';
-
-const inter = Inter({ subsets: ['latin'] })
+import { Nunito } from 'next/font/google';
+import Navbar from './componnent/navbar/navbar';
 
 export const metadata = {
   title: 'Wecare',
   description: 'A global community for child development',
 }
 
+const font = Nunito(
+  { subsets: ['latin'] }
+)
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="stylesheet" href={inter} />
-      </head>
-
-      <body className="flex flex-col min-h-screen">
+      <body className={font.className} >
         <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   )

@@ -5,14 +5,14 @@ import Image from 'next/image';
 
 import placeHolder from '../../../public/images/avatar.png';
 
-const Avatar = () => {
+const Avatar = ({src}) => {
     return (
         <Image
           alt="Avatar"
           className="rounded-full"
           height={30}
           width={30}
-          src={placeHolder}
+          src={src || placeHolder}
         />    
     );
   };

@@ -182,3 +182,42 @@ export const avatarColors = [
   '#1de9b6',
   '#d84315'
 ];
+
+
+export const availability = {
+  sunday: {
+    available: false,
+    startTime: "",
+    endTime: "",
+  },
+  monday: {
+    available: false,
+    startTime: "",
+    endTime: "",
+  },
+  tuesday: {
+    available: false,
+    startTime: "",
+    endTime: "",
+  },
+  wednesday: {
+    available: false,
+    startTime: "",
+    endTime: "",
+  },
+  thursday: {
+    available: false,
+    startTime: "",
+    endTime: "",
+  },
+  friday: {
+    available: false,
+    startTime: "",
+    endTime: "",
+  },
+  saturday: {
+    available: false,
+    startTime: "",
+    endTime: "",
+  },
+};

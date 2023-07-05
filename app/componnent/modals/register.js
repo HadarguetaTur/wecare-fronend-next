@@ -2,7 +2,7 @@
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from 'react-icons/fc';
 import useRegisterModal from "@/app/hooks/useRegisterModal";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import Modal from "./modal";
 import Heading from "./heading";
@@ -11,9 +11,11 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import Button from "../button/button";
 import { signIn } from "next-auth/react";
+import useLoginModal from "@/app/hooks/useLoginModal";
 
 const Register = () => {
     const registerModal = useRegisterModal();
+    const loginModal = useLoginModal();
     const [isLoading, setIsLoading] = useState(false);
     const {
         register,
@@ -26,6 +28,11 @@ const Register = () => {
 
         }
     });
+
+    const onToggle = useCallback(() => {
+        registerModal.onClose();
+        loginModal.onOpen();
+    }, [loginModal, registerModal])
 
     const onSubmit = (data) => {
         console.log(data);
@@ -95,7 +102,7 @@ const Register = () => {
                     <div>
                         Already have an account?
                     </div>
-                    <div onClick={registerModal.onClose} className="text-neutral-800 curser-pointer hover:underline">
+                    <div onClick={onToggle} className="text-neutral-800 curser-pointer hover:underline">
                         Log in
                     </div>
                 </div>

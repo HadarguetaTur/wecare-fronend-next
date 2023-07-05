@@ -1,4 +1,5 @@
 import './globals.css'
+import 'leaflet/dist/leaflet.css'
 import React from "react";
 import { Nunito } from 'next/font/google';
 import Navbar from './componnent/navbar/navbar';
@@ -7,6 +8,7 @@ import ToasterProvider from './provaiders/toasterProvaider';
 import Login from './componnent/modals/login';
 import getCurrentUser from './action/gerCurrentUser';
 import ClientOnly from './componnent/client-only/clientOnly';
+import JoinTheTeam from './componnent/modals/joinTheTeam';
 
 export const metadata = {
   title: 'Wecare',
@@ -24,6 +26,7 @@ export default async function RootLayout({ children }) {
       <body className={font.className} >
         <ClientOnly>
           <ToasterProvider />
+          <JoinTheTeam/>
           <Login />
           <Register />
           <Navbar currentUser={currentUser} />

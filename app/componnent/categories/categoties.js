@@ -8,7 +8,6 @@ export function Categories() {
 
     return (
         <Container>
-
             <div className="pt-3 pb-3 flex flex-row items-center justify-between overflow-x-auto scrollbar-hide">
                {
                 subjects.map((item)=>(
@@ -22,6 +21,5 @@ export function Categories() {
                }
             </div>
         </Container>
-
     );
 }

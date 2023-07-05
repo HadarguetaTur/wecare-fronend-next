@@ -1,3 +1,5 @@
+import { BiDollar } from "react-icons/bi";
+
 const Input = ({
     id,
     label,
@@ -63,8 +65,6 @@ const Input = ({
             >
                 {label}
             </label>
-
-
         </div>
     );
 };

@@ -63,14 +63,14 @@ const Modal = ({
                             </div>
                             <div className="flex flex-col gap-2 p-6">
                                 <div className="flex flex-row items-center gap-4 w-full">
-                                   {secondaryAction&& secondaryLabel( 
-                                       <Button
-                                        outline
-                                        disabled={disabled}
-                                        label={secondaryLabel}
-                                        onClick={handleSecondaryAction}
-                                    />
-                                   )}         
+                                    {secondaryAction && secondaryLabel && (
+                                        <Button
+                                            outline
+                                            disabled={disabled}
+                                            label={secondaryLabel}
+                                            onClick={handleSecondaryAction}
+                                        />
+                                    )}
                                     <Button
                                         disabled={disabled}
                                         label={actionLabel}

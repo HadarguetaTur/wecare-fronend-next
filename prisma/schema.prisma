@@ -8,138 +8,86 @@ datasource db {
 }
 
 model User {
-  id               String           @id @default(auto()) @map("_id") @db.ObjectId
-  name             String?
-  email            String?          @unique
-  emailVerified    DateTime?
-  image            String?
-  hashedPassword   String?
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  providerAccount  ProviderAccount?
-  posts            Post[]
-  meetings         Meeting[]
-  opinions         Opinion[]
-  messagesSent     Message[]        @relation("SentMessages")
-  messagesReceived Message[]        @relation("ReceivedMessages")
-  shares           Share[]          @relation("UserShares")
-  comments         Comment[]
-  feelings         Feeling[]
-  sharedBy         Share[]          @relation("SharedByUser")
-  notifications    Notification[]
-  followers        Followers[]      @relation("Followers")
-  following        Following[]      @relation("Following")
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  favoriteIds    String[]  @db.ObjectId
+
+  accounts Account[]
+  listings Listing[]
+  meeting  Meeting[]
 }
 
-model ProviderAccount {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  user        User        @relation(fields: [userId], references: [id])
-  userId      String      @unique @db.ObjectId
-  authorities Authority[]
-  meetings    Meeting[]
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 
-model Post {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  user     User      @relation(fields: [userId], references: [id])
-  userId   String    @db.ObjectId
-  type     String
-  content  String
-  comments Comment[]
-  feelings Feeling[]
-  shares   Share[]
+model Listing {
+  id                                String   @id @default(auto()) @map("_id") @db.ObjectId
+  title                             String
+  description                       String
+  about                             String
+  imageSrc                          String
+  createdAt                         DateTime @default(now())
+  category                          String
+  locationValue                     String
+  userId                            String   @db.ObjectId
+  meetingPrice                      Int
+  isReceiveHealthInsuranceFund      Boolean
+  isReceiveHealthInsuranceCompanies Boolean
+  instagramLink                     String
+  facebookLink                      String
+  contactEmail                      String
+  phoneNumber                       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  meeting      Meeting[]
+  availability Availability[]
 }
 
-model Comment {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @db.ObjectId
-  post    Post   @relation(fields: [postId], references: [id])
-  postId  String @db.ObjectId
-  content String
+model Availability {
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  listingId         String            @db.ObjectId
+  listing           Listing           @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  availabilityToDay AvailabilityDay[]
 }
 
-model Feeling {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @db.ObjectId
-  post    Post   @relation(fields: [postId], references: [id])
-  postId  String @db.ObjectId
-  feeling String
-}
-
-model Share {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  user      User   @relation("UserShares", fields: [userId], references: [id])
-  userId    String @db.ObjectId
-  post      Post   @relation(fields: [postId], references: [id])
-  postId    String @db.ObjectId
-  shareType String
-  sharedBy  User   @relation("SharedByUser", fields: [userId], references: [id])
-}
-
-model Authority {
-  id                String          @id @default(auto()) @map("_id") @db.ObjectId
-  providerAccount   ProviderAccount @relation(fields: [providerAccountId], references: [id])
-  providerAccountId String          @db.ObjectId
-  content           String
+model AvailabilityDay {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  available      Boolean
+  startTime      String?
+  endTime        String?
+  availabilityId String       @db.ObjectId
+  availability   Availability @relation(fields: [availabilityId], references: [id])
 }
 
 model Meeting {
-  id                String          @id @default(auto()) @map("_id") @db.ObjectId
-  user              User            @relation(fields: [userId], references: [id])
-  userId            String          @db.ObjectId
-  providerAccount   ProviderAccount @relation(fields: [providerAccountId], references: [id])
-  providerAccountId String          @db.ObjectId
-  date              DateTime
-  documents         Document[]
-  totalPrice        Int
-}
-
-model Document {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  meeting   Meeting @relation(fields: [meetingId], references: [id])
-  meetingId String  @db.ObjectId
-  content   String
-}
-
-model Opinion {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @db.ObjectId
-  content String
-}
-
-model Message {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
-  senderId   String   @db.ObjectId
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  receiverId String   @db.ObjectId
-  content    String
-  createdAt  DateTime @default(now())
-}
-
-model Notification {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
-  content   String
-  createdAt DateTime @default(now())
-}
-
-model Followers {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  user       User     @relation("Followers", fields: [userId], references: [id])
   userId     String   @db.ObjectId
-  followerId String
+  listingId  String   @db.ObjectId
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Int
   createdAt  DateTime @default(now())
-}
-
-model Following {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  user       User     @relation("Following", fields: [userId], references: [id])
-  userId     String   @db.ObjectId
-  followerId String
-  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 }

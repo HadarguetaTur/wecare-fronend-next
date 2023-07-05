@@ -18,7 +18,6 @@ const Login = () => {
     const loginModal = useLoginModal();
     const registerModal = useRegisterModal();
     const [isLoading, setIsLoading] = useState(false);
-
     const {
         register,
         handleSubmit,
